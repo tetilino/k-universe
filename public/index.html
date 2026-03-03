@@ -2,31 +2,36 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>K-Universe 💜</title>
+
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header>
-  <h1>K-Universe 💜</h1>
-  <p class="subtitle">Portal de Notícias K-Pop em Tempo Real</p>
+<header class="hero">
+  <div class="hero-content">
+    <h1>K-Universe</h1>
+    <p>Notícias virais de K-Pop em tempo real</p>
+  </div>
 </header>
 
-<div class="profiles">
-  <div class="profile" onclick="filterGroup('ILLIT')">ILLIT</div>
-  <div class="profile" onclick="filterGroup('BLACKPINK')">BLACKPINK</div>
-  <div class="profile" onclick="filterGroup('TWICE')">TWICE</div>
-  <div class="profile" onclick="filterGroup('UNIS')">UNIS</div>
-  <div class="profile" onclick="filterGroup('hearts2Hearts')">Hearts2Hearts</div>
-  <div class="profile" onclick="filterGroup('KiiiKiii')">KiiiKiii</div>
-</div>
+<nav class="profiles">
+  <button onclick="filterGroup('ALL')">🔥 Trending</button>
+  <button onclick="filterGroup('ILLIT')">ILLIT</button>
+  <button onclick="filterGroup('BLACKPINK')">BLACKPINK</button>
+  <button onclick="filterGroup('TWICE')">TWICE</button>
+  <button onclick="filterGroup('UNIS')">UNIS</button>
+  <button onclick="filterGroup('hearts2Hearts')">Hearts2Hearts</button>
+  <button onclick="filterGroup('KiiiKiii')">KiiiKiii</button>
+</nav>
 
-<div class="container">
+<main>
   <div id="feed" class="grid"></div>
-</div>
+</main>
 
 <script src="script.js"></script>
-
 </body>
 </html>

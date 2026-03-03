@@ -11,29 +11,34 @@ function renderPosts(posts) {
   const container = document.getElementById("feed");
   container.innerHTML = "";
 
-  posts.forEach(post => {
+  posts.forEach((post, index) => {
+
     const card = document.createElement("div");
     card.className = "card";
+    card.style.animationDelay = `${index * 0.1}s`;
 
     card.innerHTML = `
-      <img src="${post.image}" />
+      <img src="${post.image}" alt="${post.group}" />
       <div class="card-content">
         <h2>${post.title}</h2>
-        <p>${post.content.substring(0, 150)}...</p>
+        <p>${post.content.substring(0, 200)}...</p>
+
         <div class="meta">
           ${new Date(post.createdAt).toLocaleString()}
         </div>
 
-        <button class="like-btn" onclick="likePost(${post.id})">
-          ❤️ ${post.likes}
-        </button>
+        <div class="actions">
+          <button class="like-btn" onclick="likePost(${post.id})">
+            ❤️ ${post.likes}
+          </button>
+        </div>
 
-        <div class="comment-section">
-          <input class="comment-input" 
-            placeholder="Comentar..."
+        <div class="comment-box">
+          <input 
+            placeholder="Escreva um comentário..."
             onkeydown="if(event.key==='Enter') addComment(${post.id}, this.value)"
           />
-          ${post.comments.map(c => `<p>💬 ${c.text}</p>`).join("")}
+          ${post.comments.map(c => `<div class="comment">💬 ${c.text}</div>`).join("")}
         </div>
       </div>
     `;
@@ -60,6 +65,11 @@ async function addComment(id, text) {
 }
 
 function filterGroup(group) {
+  if (group === "ALL") {
+    renderPosts(allPosts);
+    return;
+  }
+
   const filtered = allPosts.filter(p => p.group === group);
   renderPosts(filtered);
 }
