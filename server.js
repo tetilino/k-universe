@@ -183,7 +183,11 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
   console.log("🚀 Servidor rodando na porta", PORT);
-  await generateInitialPosts();
+
+  if (posts.length === 0) {
+    console.log("🔥 Gerando posts iniciais...");
+    await generateInitialPosts();
+  }
 });
 
 // ===============================
