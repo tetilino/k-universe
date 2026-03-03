@@ -20,7 +20,7 @@ const groq = new Groq({
 let posts = [];
 
 // ===============================
-// 🔹 CACHE INTELIGENTE
+// 🔹 CACHE DE NOTÍCIAS
 // ===============================
 let groupCache = {};
 const CACHE_TIME = 1000 * 60 * 5;
@@ -35,25 +35,20 @@ const groups = [
 ];
 
 // ===============================
-// 🔥 IMAGENS FIXAS POR GRUPO
+// 🔹 IMAGENS FIXAS POR GRUPO
 // ===============================
+// Imagens escolhidas manualmente que representam cada grupo
 const groupImages = {
-  ILLIT:
-    "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1400&q=80",
-  BLACKPINK:
-    "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1400&q=80",
-  TWICE:
-    "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?auto=format&fit=crop&w=1400&q=80",
-  UNIS:
-    "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=1400&q=80",
-  hearts2Hearts:
-    "https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=1400&q=80",
-  KiiiKiii:
-    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1400&q=80"
+  ILLIT: "/images/illit.jpg",
+  BLACKPINK: "/images/blackpink.jpg",
+  TWICE: "/images/twice.jpg",
+  UNIS: "/images/unis.jpg",
+  hearts2Hearts: "/images/hearts2hearts.jpg",
+  KiiiKiii: "/images/kiiikiii.jpg"
 };
 
-const defaultImage =
-  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1400&q=80";
+// Imagem padrão se faltar
+const defaultImage = "/images/default.jpg";
 
 // ===============================
 // 🔹 GERAR NOTÍCIA COM CACHE
@@ -99,8 +94,8 @@ Não use emojis.`
 async function createPost(group) {
   try {
     const news = await generateNews(group);
-
     const lines = news.split("\n").filter(l => l.trim() !== "");
+
     const title = lines[0] || "Sem título";
     const content = lines.slice(1).join("\n") || news;
 
@@ -118,20 +113,16 @@ async function createPost(group) {
     };
 
     posts.unshift(post);
-
-    if (posts.length > 15) {
-      posts.pop();
-    }
+    if (posts.length > 12) posts.pop();
 
     console.log("✅ Post criado:", group);
-
   } catch (err) {
     console.error("❌ Erro ao gerar notícia:", err.message);
   }
 }
 
 // ===============================
-// 🔹 LISTAR POSTS (FORÇA IMAGEM CORRETA)
+// 🔹 LISTAR POSTS (COM IMAGEM CORRETA)
 // ===============================
 app.get("/posts", (req, res) => {
   const sortedPosts = [...posts]
@@ -145,33 +136,31 @@ app.get("/posts", (req, res) => {
 });
 
 // ===============================
-// 🔹 VIEW
+// 🔹 REGISTRAR VIEWS
 // ===============================
 app.post("/view/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
   if (!post) return res.status(404).json({ error: "Post não encontrado" });
 
-  post.views += 1;
-  post.popularity = post.likes * 2 + post.views;
-
+  post.views++;
+  post.popularity = post.views + post.likes * 2;
   res.json({ success: true });
 });
 
 // ===============================
-// 🔹 LIKE
+// 🔹 CURTIR
 // ===============================
 app.post("/like/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
   if (!post) return res.status(404).json({ error: "Post não encontrado" });
 
-  post.likes += 1;
-  post.popularity = post.likes * 2 + post.views;
-
+  post.likes++;
+  post.popularity = post.views + post.likes * 2;
   res.json({ success: true });
 });
 
 // ===============================
-// 🔹 COMMENT
+// 🔹 COMENTÁRIOS
 // ===============================
 app.post("/comment/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
@@ -191,34 +180,28 @@ app.post("/comment/:id", (req, res) => {
 app.get("/generate", async (req, res) => {
   const randomGroup =
     groups[Math.floor(Math.random() * groups.length)];
-
   await createPost(randomGroup);
   res.json({ message: "Post gerado com sucesso!" });
 });
 
 // ===============================
-// 🔹 POSTS INICIAIS
+// 🔹 POSTS INICIAIS AO INICIAR
 // ===============================
 async function generateInitialPosts() {
   for (let i = 0; i < 4; i++) {
     const randomGroup =
       groups[Math.floor(Math.random() * groups.length)];
-
     await createPost(randomGroup);
   }
 }
 
 // ===============================
-// 🔹 PORTA
+// 🔹 INICIAR SERVIDOR
 // ===============================
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, async () => {
   console.log("🚀 Servidor rodando na porta", PORT);
-
-  if (posts.length === 0) {
-    await generateInitialPosts();
-  }
+  if (posts.length === 0) await generateInitialPosts();
 });
 
 // ===============================
@@ -227,6 +210,5 @@ app.listen(PORT, async () => {
 setInterval(() => {
   const randomGroup =
     groups[Math.floor(Math.random() * groups.length)];
-
   createPost(randomGroup);
 }, 60000);
