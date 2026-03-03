@@ -37,13 +37,14 @@ const groups = [
 // ===============================
 // 🔥 IMAGENS PROFISSIONAIS FIXAS
 // ===============================
+
 const groupImages = {
-  ILLIT: "https://images.unsplash.com/photo-1506157786151-b8491531f063",
-  BLACKPINK: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4",
-  TWICE: "https://images.unsplash.com/photo-1497032205916-ac775f0649ae",
-  UNIS: "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2",
-  hearts2Hearts: "https://images.unsplash.com/photo-1487180144351-b8472da7d491",
-  KiiiKiii: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3"
+  ILLIT: "https://source.unsplash.com/1200x800/?kpop,girlgroup,illit",
+  BLACKPINK: "https://source.unsplash.com/1200x800/?kpop,blackpink,stage",
+  TWICE: "https://source.unsplash.com/1200x800/?kpop,twice,concert",
+  UNIS: "https://source.unsplash.com/1200x800/?kpop,girlgroup,concert",
+  hearts2Hearts: "https://source.unsplash.com/1200x800/?kpop,band,stage",
+  KiiiKiii: "https://source.unsplash.com/1200x800/?electronic,music,festival"
 };
 
 // ===============================

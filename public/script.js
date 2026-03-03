@@ -1,33 +1,38 @@
 let allPosts = [];
+let currentFilter = "Trending";
 
 async function loadPosts() {
-  const res = await fetch("/posts");
-  const posts = await res.json();
+  const response = await fetch("/posts");
+  const posts = await response.json();
+
   allPosts = posts;
-  renderPosts(posts);
+
+  applyFilter();
+}
+
+function applyFilter() {
+  let filtered = allPosts;
+
+  if (currentFilter !== "Trending") {
+    filtered = allPosts.filter(post => post.group === currentFilter);
+  }
+
+  renderPosts(filtered);
 }
 
 function renderPosts(posts) {
-  const container = document.getElementById("feed");
-  container.innerHTML = "";
+  const grid = document.querySelector(".grid");
+  grid.innerHTML = "";
 
-  posts.forEach((post, index) => {
-
+  posts.forEach(post => {
     const card = document.createElement("div");
     card.className = "card";
-    card.style.animationDelay = `${index * 0.1}s`;
 
     card.innerHTML = `
-      <img 
-        src="${post.image}" 
-        alt="${post.group}"
-        onerror="this.src='https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1000&q=80'"
-      />
-
+      <img src="${post.image}" alt="${post.group}">
       <div class="card-content">
         <h2>${post.title}</h2>
-        <p>${post.content.substring(0, 200)}...</p>
-
+        <p>${post.content.substring(0, 180)}...</p>
         <div class="meta">
           ${new Date(post.createdAt).toLocaleString()}
         </div>
@@ -40,18 +45,23 @@ function renderPosts(posts) {
 
         <div class="comment-box">
           <input 
-            placeholder="Escreva um comentário..."
-            onkeydown="if(event.key==='Enter') addComment(${post.id}, this.value)"
-          />
-
-          ${post.comments.map(c => 
-            `<div class="comment">💬 ${c.text}</div>`
-          ).join("")}
+            placeholder="Escreva um comentário..." 
+            onkeydown="if(event.key==='Enter') addComment(${post.id}, this)"
+          >
         </div>
+
+        <div>
+          ${post.comments.map(c => `
+            <div class="comment">
+              ${c.text}
+            </div>
+          `).join("")}
+        </div>
+
       </div>
     `;
 
-    container.appendChild(card);
+    grid.appendChild(card);
   });
 }
 
@@ -60,27 +70,23 @@ async function likePost(id) {
   loadPosts();
 }
 
-async function addComment(id, text) {
-  if (!text) return;
+async function addComment(id, input) {
+  if (!input.value.trim()) return;
 
   await fetch(`/comment/${id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text })
+    body: JSON.stringify({ text: input.value })
   });
 
+  input.value = "";
   loadPosts();
 }
 
-function filterGroup(group) {
-  if (group === "ALL") {
-    renderPosts(allPosts);
-    return;
-  }
-
-  const filtered = allPosts.filter(p => p.group === group);
-  renderPosts(filtered);
+function setFilter(group) {
+  currentFilter = group;
+  applyFilter();
 }
 
-setInterval(loadPosts, 10000);
 loadPosts();
+setInterval(loadPosts, 10000);
