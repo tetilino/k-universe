@@ -1,5 +1,8 @@
 let allPosts = [];
 
+// =============================
+// 🔹 CARREGAR POSTS
+// =============================
 async function loadPosts() {
   try {
     const response = await fetch("/posts");
@@ -13,12 +16,14 @@ async function loadPosts() {
   }
 }
 
+// =============================
+// 🔹 RENDERIZAR POSTS
+// =============================
 function renderPosts(posts) {
-  const container = document.getElementById("feed"); // 🔥 corrigido (era "posts")
+  const container = document.getElementById("feed");
   container.innerHTML = "";
 
-  posts.forEach((post, index) => {
-
+  posts.forEach(post => {
     const card = document.createElement("div");
 
     card.style.background = "rgba(255,255,255,0.1)";
@@ -27,54 +32,46 @@ function renderPosts(posts) {
     card.style.borderRadius = "15px";
     card.style.maxWidth = "600px";
     card.style.color = "white";
-    card.style.transition = "0.4s";
-    card.style.opacity = "0";
-    card.style.transform = "translateY(20px)";
-
-    // 🔥 Medalha para o mais popular
-    const medal = index === 0 ? "🔥 Mais Popular" : "";
 
     card.innerHTML = `
       <h2>${post.title}</h2>
-      <small style="color: #ffd700;">${medal}</small>
       <img src="${post.image}" style="width:100%; border-radius:10px; margin:10px 0;">
       <p>${post.content}</p>
-
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-        <button onclick="likePost(${post.id})" 
-          style="background:#ff4d6d; border:none; padding:8px 15px; border-radius:8px; color:white; cursor:pointer;">
+        <button onclick="likePost(${post.id})" style="padding:6px 12px; border:none; border-radius:8px; cursor:pointer;">
           ❤️ ${post.likes}
         </button>
-
-        <span>👁 ${post.views}</span>
+        <small>${new Date(post.createdAt).toLocaleString()}</small>
       </div>
-
-      <small style="opacity:0.7;">${new Date(post.createdAt).toLocaleString()}</small>
     `;
 
     container.appendChild(card);
 
-    setTimeout(() => {
-      card.style.opacity = "1";
-      card.style.transform = "translateY(0)";
-    }, 50);
+    // 🔥 Registra visualização
+    fetch(`/view/${post.id}`, { method: "POST" });
   });
 }
 
-// 🔥 Curtir post
+// =============================
+// 🔹 CURTIR POST
+// =============================
 async function likePost(id) {
   await fetch(`/like/${id}`, { method: "POST" });
   loadPosts();
 }
 
-// 🔥 Filtro por grupo
+// =============================
+// 🔹 FILTRO
+// =============================
 function filterGroup(group) {
   const filtered = allPosts.filter(post => post.group === group);
   renderPosts(filtered);
 }
 
-// 🔥 Atualiza automaticamente
-setInterval(loadPosts, 5000);
+// =============================
+// 🔹 AUTO REFRESH
+// =============================
+setInterval(loadPosts, 10000);
 
-// 🔥 Primeira carga
+// Primeira carga
 loadPosts();
