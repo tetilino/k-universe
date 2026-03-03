@@ -26,12 +26,12 @@ let groupCache = {};
 const CACHE_TIME = 1000 * 60 * 5;
 
 const groups = [
-  "ILLIT",
-  "BLACKPINK",
-  "TWICE",
-  "UNIS",
-  "hearts2Hearts",
-  "KiiiKiii"
+  "illit",
+  "blackpink",
+  "twice",
+  "unis",
+  "hearts2hearts",
+  "kiiikiii"
 ];
 
 // ===============================
@@ -39,14 +39,13 @@ const groups = [
 // ===============================
 // Imagens escolhidas manualmente que representam cada grupo
 const groupImages = {
-  ILLIT: "/images/illit.jpg",
-  BLACKPINK: "/images/blackpink.jpg",
-  TWICE: "/images/twice.jpg",
-  UNIS: "/images/unis.jpg",
-  hearts2Hearts: "/images/hearts2hearts.jpg",
-  KiiiKiii: "/images/kiiikiii.jpg"
+  illit: "/images/illit.jpg",
+  blackpink: "/images/blackpink.jpg",
+  twice: "/images/twice.jpg",
+  unis: "/images/unis.jpg",
+  hearts2hearts: "/images/hearts2hearts.jpg",
+  kiiikiii: "/images/kiiikiii.jpg"
 };
-
 // Imagem padrão se faltar
 const defaultImage = "/images/default.jpg";
 
