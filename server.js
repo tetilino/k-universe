@@ -14,10 +14,14 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY
 });
 
-// 🔹 Armazenamento em memória
+// ===============================
+// 🔹 ARMAZENAMENTO EM MEMÓRIA
+// ===============================
 let posts = [];
 
-// 🔹 Cache inteligente
+// ===============================
+// 🔹 CACHE INTELIGENTE
+// ===============================
 let groupCache = {};
 const CACHE_TIME = 1000 * 60 * 5; // 5 minutos
 
@@ -30,12 +34,13 @@ const groups = [
   "KiiiKiii"
 ];
 
-
-// 🔹 Gerar notícia com cache
+// ===============================
+// 🔹 GERAR NOTÍCIA COM CACHE
+// ===============================
 async function generateNews(group) {
   const now = Date.now();
 
-  // 🔥 Se ainda está no cache
+  // Se ainda está no cache
   if (
     groupCache[group] &&
     now - groupCache[group].timestamp < CACHE_TIME
@@ -60,7 +65,7 @@ Não use emojis.`
 
   const content = completion.choices[0].message.content;
 
-  // 🔥 Salva no cache
+  // Salva no cache
   groupCache[group] = {
     content,
     timestamp: now
@@ -69,21 +74,22 @@ Não use emojis.`
   return content;
 }
 
-
-// 🔹 Criar post
+// ===============================
+// 🔹 CRIAR POST
+// ===============================
 async function createPost(group) {
   try {
     const news = await generateNews(group);
 
-    const lines = news.split("\n");
-    const title = lines[0]?.trim() || "Sem título";
-    const content = lines.slice(1).join("\n").trim() || news;
+    const lines = news.split("\n").filter(line => line.trim() !== "");
+    const title = lines[0] || "Sem título";
+    const content = lines.slice(1).join("\n") || news;
 
     const post = {
       id: Date.now(),
       group,
-      title,
-      content,
+      title: title.trim(),
+      content: content.trim(),
       image: `https://source.unsplash.com/400x250/?kpop,${group}`,
       createdAt: new Date(),
       likes: 0,
@@ -93,7 +99,7 @@ async function createPost(group) {
 
     posts.unshift(post);
 
-    // 🔥 Mantém só 10 posts
+    // Mantém apenas 10 posts
     if (posts.length > 10) {
       posts.pop();
     }
@@ -105,22 +111,35 @@ async function createPost(group) {
   }
 }
 
-
-// 🔹 Listar posts com ranking
+// ===============================
+// 🔹 LISTAR POSTS (SEM INFLAR VIEWS)
+// ===============================
 app.get("/posts", (req, res) => {
-
-  posts.forEach(post => {
-    post.views += 1;
-    post.popularity = post.likes * 2 + post.views;
-  });
-
-  const sortedPosts = [...posts].sort((a, b) => b.popularity - a.popularity);
+  const sortedPosts = [...posts].sort(
+    (a, b) => b.popularity - a.popularity
+  );
 
   res.json(sortedPosts);
 });
 
+// ===============================
+// 🔹 REGISTRAR VISUALIZAÇÃO
+// ===============================
+app.post("/view/:id", (req, res) => {
+  const post = posts.find(p => p.id == req.params.id);
 
-// 🔹 Curtir post
+  if (post) {
+    post.views += 1;
+    post.popularity = post.likes * 2 + post.views;
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: "Post não encontrado" });
+  }
+});
+
+// ===============================
+// 🔹 CURTIR POST
+// ===============================
 app.post("/like/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
 
@@ -133,25 +152,33 @@ app.post("/like/:id", (req, res) => {
   }
 });
 
-
-// 🔹 Gerar manualmente
+// ===============================
+// 🔹 GERAR MANUALMENTE
+// ===============================
 app.get("/generate", async (req, res) => {
-  const randomGroup = groups[Math.floor(Math.random() * groups.length)];
+  const randomGroup =
+    groups[Math.floor(Math.random() * groups.length)];
+
   await createPost(randomGroup);
+
   res.json({ message: "Post gerado com sucesso!" });
 });
 
-
-// 🔥 Gera 3 posts iniciais
+// ===============================
+// 🔹 GERAR POSTS INICIAIS
+// ===============================
 async function generateInitialPosts() {
   for (let i = 0; i < 3; i++) {
-    const randomGroup = groups[Math.floor(Math.random() * groups.length)];
+    const randomGroup =
+      groups[Math.floor(Math.random() * groups.length)];
+
     await createPost(randomGroup);
   }
 }
 
-
-// 🔹 Porta para deploy
+// ===============================
+// 🔹 PORTA (RENDER READY)
+// ===============================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
@@ -159,9 +186,12 @@ app.listen(PORT, async () => {
   await generateInitialPosts();
 });
 
-
-// 🔥 Geração automática
+// ===============================
+// 🔹 GERAÇÃO AUTOMÁTICA
+// ===============================
 setInterval(() => {
-  const randomGroup = groups[Math.floor(Math.random() * groups.length)];
+  const randomGroup =
+    groups[Math.floor(Math.random() * groups.length)];
+
   createPost(randomGroup);
 }, 30000);
