@@ -35,17 +35,27 @@ const groups = [
 ];
 
 // ===============================
-// 🔥 IMAGENS PROFISSIONAIS FIXAS
+// 🔥 IMAGENS REAIS FIXAS (CDN DIRETO)
 // ===============================
 
 const groupImages = {
-  ILLIT: "https://source.unsplash.com/1200x800/?kpop,girlgroup,illit",
-  BLACKPINK: "https://source.unsplash.com/1200x800/?kpop,blackpink,stage",
-  TWICE: "https://source.unsplash.com/1200x800/?kpop,twice,concert",
-  UNIS: "https://source.unsplash.com/1200x800/?kpop,girlgroup,concert",
-  hearts2Hearts: "https://source.unsplash.com/1200x800/?kpop,band,stage",
-  KiiiKiii: "https://source.unsplash.com/1200x800/?electronic,music,festival"
+  ILLIT:
+    "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1200&q=80",
+  BLACKPINK:
+    "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&q=80",
+  TWICE:
+    "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?auto=format&fit=crop&w=1200&q=80",
+  UNIS:
+    "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=1200&q=80",
+  hearts2Hearts:
+    "https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=1200&q=80",
+  KiiiKiii:
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1200&q=80"
 };
+
+// Fallback seguro
+const defaultImage =
+  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=80";
 
 // ===============================
 // 🔹 GERAR NOTÍCIA COM CACHE
@@ -67,7 +77,7 @@ async function generateNews(group) {
         role: "user",
         content: `Crie uma notícia curta e criativa sobre o grupo ${group}.
 Separe o título na primeira linha e o conteúdo abaixo.
-Escreva como um portal profissional de entretenimento.
+Escreva como um portal profissional.
 Não use emojis.`
       }
     ],
@@ -101,7 +111,7 @@ async function createPost(group) {
       group,
       title,
       content,
-      image: groupImages[group] + "?auto=format&fit=crop&w=1200&q=80",
+      image: groupImages[group] || defaultImage,
       createdAt: new Date(),
       likes: 0,
       views: 0,
@@ -129,55 +139,48 @@ app.get("/posts", (req, res) => {
   const sortedPosts = [...posts].sort(
     (a, b) => b.popularity - a.popularity
   );
-
   res.json(sortedPosts);
 });
 
 // ===============================
-// 🔹 REGISTRAR VIEW
+// 🔹 VIEW
 // ===============================
 app.post("/view/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
+  if (!post) return res.status(404).json({ error: "Post não encontrado" });
 
-  if (post) {
-    post.views += 1;
-    post.popularity = post.likes * 2 + post.views;
-    res.json({ success: true });
-  } else {
-    res.status(404).json({ error: "Post não encontrado" });
-  }
+  post.views += 1;
+  post.popularity = post.likes * 2 + post.views;
+
+  res.json({ success: true });
 });
 
 // ===============================
-// 🔹 CURTIR POST
+// 🔹 LIKE
 // ===============================
 app.post("/like/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
+  if (!post) return res.status(404).json({ error: "Post não encontrado" });
 
-  if (post) {
-    post.likes += 1;
-    post.popularity = post.likes * 2 + post.views;
-    res.json({ success: true });
-  } else {
-    res.status(404).json({ error: "Post não encontrado" });
-  }
+  post.likes += 1;
+  post.popularity = post.likes * 2 + post.views;
+
+  res.json({ success: true });
 });
 
 // ===============================
-// 🔹 COMENTAR
+// 🔹 COMMENT
 // ===============================
 app.post("/comment/:id", (req, res) => {
   const post = posts.find(p => p.id == req.params.id);
+  if (!post) return res.status(404).json({ error: "Post não encontrado" });
 
-  if (post) {
-    post.comments.push({
-      text: req.body.text,
-      date: new Date()
-    });
-    res.json({ success: true });
-  } else {
-    res.status(404).json({ error: "Post não encontrado" });
-  }
+  post.comments.push({
+    text: req.body.text,
+    date: new Date()
+  });
+
+  res.json({ success: true });
 });
 
 // ===============================
@@ -188,7 +191,6 @@ app.get("/generate", async (req, res) => {
     groups[Math.floor(Math.random() * groups.length)];
 
   await createPost(randomGroup);
-
   res.json({ message: "Post gerado com sucesso!" });
 });
 
@@ -213,7 +215,6 @@ app.listen(PORT, async () => {
   console.log("🚀 Servidor rodando na porta", PORT);
 
   if (posts.length === 0) {
-    console.log("🔥 Gerando posts iniciais...");
     await generateInitialPosts();
   }
 });
