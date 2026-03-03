@@ -18,7 +18,12 @@ function renderPosts(posts) {
     card.style.animationDelay = `${index * 0.1}s`;
 
     card.innerHTML = `
-      <img src="${post.image}" alt="${post.group}" />
+      <img 
+        src="${post.image}" 
+        alt="${post.group}"
+        onerror="this.src='https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1000&q=80'"
+      />
+
       <div class="card-content">
         <h2>${post.title}</h2>
         <p>${post.content.substring(0, 200)}...</p>
@@ -38,7 +43,10 @@ function renderPosts(posts) {
             placeholder="Escreva um comentário..."
             onkeydown="if(event.key==='Enter') addComment(${post.id}, this.value)"
           />
-          ${post.comments.map(c => `<div class="comment">💬 ${c.text}</div>`).join("")}
+
+          ${post.comments.map(c => 
+            `<div class="comment">💬 ${c.text}</div>`
+          ).join("")}
         </div>
       </div>
     `;
