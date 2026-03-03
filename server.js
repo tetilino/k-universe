@@ -136,9 +136,14 @@ async function createPost(group) {
 // 🔹 LISTAR POSTS
 // ===============================
 app.get("/posts", (req, res) => {
-  const sortedPosts = [...posts].sort(
-    (a, b) => b.popularity - a.popularity
-  );
+
+  const sortedPosts = [...posts]
+    .sort((a, b) => b.popularity - a.popularity)
+    .map(post => ({
+      ...post,
+      image: groupImages[post.group] || defaultImage
+    }));
+
   res.json(sortedPosts);
 });
 
