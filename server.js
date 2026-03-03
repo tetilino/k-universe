@@ -85,17 +85,18 @@ async function createPost(group) {
     const title = lines[0] || "Sem título";
     const content = lines.slice(1).join("\n") || news;
 
-    const post = {
-      id: Date.now(),
-      group,
-      title: title.trim(),
-      content: content.trim(),
-      image: `https://source.unsplash.com/400x250/?kpop,${group}`,
-      createdAt: new Date(),
-      likes: 0,
-      views: 0,
-      popularity: 0
-    };
+  const post = {
+  id: Date.now(),
+  group,
+  title,
+  content,
+  image: `https://source.unsplash.com/400x250/?kpop,${group}`,
+  createdAt: new Date(),
+  likes: 0,
+  views: 0,
+  popularity: 0,
+  comments: []
+};
 
     posts.unshift(post);
 
@@ -146,6 +147,20 @@ app.post("/like/:id", (req, res) => {
   if (post) {
     post.likes += 1;
     post.popularity = post.likes * 2 + post.views;
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: "Post não encontrado" });
+  }
+});
+
+app.post("/comment/:id", (req, res) => {
+  const post = posts.find(p => p.id == req.params.id);
+
+  if (post) {
+    post.comments.push({
+      text: req.body.text,
+      date: new Date()
+    });
     res.json({ success: true });
   } else {
     res.status(404).json({ error: "Post não encontrado" });

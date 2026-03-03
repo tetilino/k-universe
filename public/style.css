@@ -8,111 +8,106 @@
 body {
   background: linear-gradient(135deg, #ff00cc, #3333ff);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  color: white;
 }
 
-/* HEADER */
 header {
-  width: 100%;
-  padding: 15px;
   text-align: center;
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  backdrop-filter: blur(10px);
+  padding: 40px 20px;
 }
 
-/* CONTAINER */
-.container {
-  width: 400px;
-  margin-top: 20px;
+header h1 {
+  font-size: 3rem;
 }
 
-/* POST CARD */
-.post {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(15px);
-  border-radius: 15px;
-  margin-bottom: 25px;
-  padding: 15px;
-  color: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  transition: transform 0.3s ease;
-}
-
-.post:hover {
-  transform: scale(1.02);
-}
-
-/* USER INFO */
-.post-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  background: pink;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.username {
-  font-weight: 600;
-}
-
-/* IMAGE */
-.post img {
-  width: 100%;
-  border-radius: 12px;
-  margin: 10px 0;
-}
-
-/* ACTIONS */
-.actions {
-  display: flex;
-  gap: 15px;
-  font-size: 20px;
-  margin-top: 5px;
-  cursor: pointer;
-}
-
-/* TEXT */
-.post h3 {
-  font-size: 16px;
+.subtitle {
+  opacity: 0.8;
   margin-top: 10px;
 }
 
-.post p {
-  font-size: 14px;
-  opacity: 0.9;
-  margin-top: 5px;
-}
-
-/* PERFIS */
 .profiles {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
 .profile {
   background: rgba(255,255,255,0.2);
-  padding: 8px 15px;
+  padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
-  color: white;
-  font-size: 13px;
   transition: 0.3s;
 }
 
 .profile:hover {
-  background: white;
-  color: #ff00cc;
+  background: rgba(255,255,255,0.4);
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.15);
+  border-radius: 15px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.meta {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 10px;
+}
+
+.like-btn {
+  background: #ff4d6d;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  color: white;
+  margin-top: 10px;
+}
+
+.comment-section {
+  margin-top: 15px;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 5px;
 }
