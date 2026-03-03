@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>K-Universe 💜</title>
-
+  <meta charset="UTF-8">
+  <title>K-Universe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-content">
-    <h1>K-Universe</h1>
-    <p>Notícias virais de K-Pop em tempo real</p>
-  </div>
+<header class="topbar">
+  <div class="logo">K-Universe</div>
+  <nav>
+    <button onclick="setFilter('Trending')">Trending</button>
+    <button onclick="setFilter('ILLIT')">ILLIT</button>
+    <button onclick="setFilter('BLACKPINK')">BLACKPINK</button>
+    <button onclick="setFilter('TWICE')">TWICE</button>
+    <button onclick="setFilter('UNIS')">UNIS</button>
+    <button onclick="setFilter('hearts2Hearts')">Hearts2Hearts</button>
+    <button onclick="setFilter('KiiiKiii')">KiiiKiii</button>
+  </nav>
 </header>
 
-<nav class="profiles">
-<button onclick="setFilter('Trending')">🔥 Trending</button>
-<button onclick="setFilter('ILLIT')">ILLIT</button>
-<button onclick="setFilter('BLACKPINK')">BLACKPINK</button>
-<button onclick="setFilter('TWICE')">TWICE</button>
-<button onclick="setFilter('UNIS')">UNIS</button>
-<button onclick="setFilter('hearts2Hearts')">Hearts2Hearts</button>
-<button onclick="setFilter('KiiiKiii')">KiiiKiii</button>
-</nav>
+<section id="featured"></section>
 
 <main>
-  <div id="feed" class="grid"></div>
+  <div class="grid"></div>
 </main>
 
 <script src="script.js"></script>
