@@ -35,27 +35,25 @@ const groups = [
 ];
 
 // ===============================
-// 🔥 IMAGENS REAIS FIXAS (CDN DIRETO)
+// 🔥 IMAGENS FIXAS POR GRUPO
 // ===============================
-
 const groupImages = {
   ILLIT:
-    "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1400&q=80",
   BLACKPINK:
-    "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1400&q=80",
   TWICE:
-    "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1497032205916-ac775f0649ae?auto=format&fit=crop&w=1400&q=80",
   UNIS:
-    "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?auto=format&fit=crop&w=1400&q=80",
   hearts2Hearts:
-    "https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=1400&q=80",
   KiiiKiii:
-    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1200&q=80"
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1400&q=80"
 };
 
-// Fallback seguro
 const defaultImage =
-  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=80";
+  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1400&q=80";
 
 // ===============================
 // 🔹 GERAR NOTÍCIA COM CACHE
@@ -121,7 +119,7 @@ async function createPost(group) {
 
     posts.unshift(post);
 
-    if (posts.length > 10) {
+    if (posts.length > 15) {
       posts.pop();
     }
 
@@ -133,10 +131,9 @@ async function createPost(group) {
 }
 
 // ===============================
-// 🔹 LISTAR POSTS
+// 🔹 LISTAR POSTS (FORÇA IMAGEM CORRETA)
 // ===============================
 app.get("/posts", (req, res) => {
-
   const sortedPosts = [...posts]
     .sort((a, b) => b.popularity - a.popularity)
     .map(post => ({
@@ -203,7 +200,7 @@ app.get("/generate", async (req, res) => {
 // 🔹 POSTS INICIAIS
 // ===============================
 async function generateInitialPosts() {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     const randomGroup =
       groups[Math.floor(Math.random() * groups.length)];
 
@@ -232,4 +229,4 @@ setInterval(() => {
     groups[Math.floor(Math.random() * groups.length)];
 
   createPost(randomGroup);
-}, 30000);
+}, 60000);
